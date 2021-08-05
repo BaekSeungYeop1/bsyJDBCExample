@@ -11,15 +11,27 @@ public class Main {
     public static void main(String[] args) {
         /*
         * 사용자의 입력을 Scanner로 받아
-        * 1을 입력받을 경우
+        * 1을 입력받을 경우 학생 테이블을 전체 조회한다
+        * 1이외 데이터를 입력될 경우 "다시 입력해 주세요"하고 다시 입력받을 수 있도록한다
         * 어제 mariadb에서 Student 테이블의 데이터를 모두 조회하여
         * 출력
          */
-        //Scanner sc = new Scanner(System.in); // in:멤버변수
-        //System.out.println("번호를 입력하시오"); //// println(녹색):메소드
-        //int selectedNumber  = sc.nextInt();
+        Scanner sc = new Scanner(System.in); // in:멤버변수
+        int selectedNumber;
+        while (true){
+            System.out.println("번호를 입력하시오"); //// println(녹색):메소드
+            selectedNumber = sc.nextInt();
+            if (selectedNumber == 1) {
+                    break;
+            }
+            System.out.println("다시 입력해주세요");
 
-        //System.out.println("선택된 번호 : " + selectedNumber);
+        }
+
+
+        System.out.println("선택된 번호 : " + selectedNumber);
+
+
 
         // Connetction, PreparedStatement, ResultSet은 interface 객체이다
         Connection conn = null;
@@ -43,9 +55,9 @@ public class Main {
             // pstmt에서 설정한 쿼리를 날린 결과를 메모리에 저장.
             rs = pstmt.executeQuery();
 
-            /* 쿼리날리 결과를 가지고 콘솔에 출력한다 */
+            /* 쿼리날린 결과를 가지고 콘솔에 출력한다 */
             while(rs.next()){ // next() :Set의 다른 데이터도 있는지 없는지?를 감지하는 메소드
-                System.out.println(rs.getInt(1) + " | " + rs.getString(2) + " | " + rs.getInt( 3) +  " | " + rs.getString(4)  +  " | " + rs.getString(5));
+                System.out.println(rs.getInt(1) + " | " + rs.getString(2) + " | " + rs.getInt(3) + " | " + rs.getString(4) + " | " + rs.getString(5));
             }
         }catch(Exception e){
             e.printStackTrace();

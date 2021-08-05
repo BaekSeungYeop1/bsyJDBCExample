@@ -1,69 +1,20 @@
 package kr.ac.daegu.bsy;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Scanner;
+import kr.ac.daegu.bsy.db.DbProcess;
+import kr.ac.daegu.bsy.input.InputUtil;
 
 public class Main {
 
-    public static void main(String[] args) {
-        /*
-        * 사용자의 입력을 Scanner로 받아
-        * 1을 입력받을 경우 학생 테이블을 전체 조회한다
-        * 1이외 데이터를 입력될 경우 "다시 입력해 주세요"하고 다시 입력받을 수 있도록한다
-        * 어제 mariadb에서 Student 테이블의 데이터를 모두 조회하여
-        * 출력
-         */
-        Scanner sc = new Scanner(System.in); // in:멤버변수
-        int selectedNumber;
-        while (true){
-            System.out.println("1. 전체학생조회");
-            System.out.println("번호를 입력하시오"); //// println(녹색):메소드
-            selectedNumber = sc.nextInt();
-            if (selectedNumber == 1) {
-                    break;
-            }
-            System.out.println("잘못 입력하였습니다");
-            System.out.println("주어진 메뉴 중 하나를 선택해주세요");
-            System.out.println(" ");
-
-        }
-
-
+    public static void main(String[] args) throws Exception {
+        // 사용자의 입력을 Scanner로 받아 (clear)
+        // "1" 이외 데이터가 입력될 경우 "다시 입력해 주세요" 하고 다시 입력받을 수 있도록 한다. (clear)
+        // "1" 을 입력받을 경우 mariadb 에서 정의한 Student 테이블의 데이터를 모두 조회하여 출력 한다.
+        // "2" 를 입력 받을 경우 새로운 학생을 추가 한다.
+        String selectedNumber = new InputUtil().validateUserInput(); // 메소드 체이닝. // 사용자의 입력을 받는다, "1" 이외의 입력이 들어오면 계속 반복하여 메뉴를 보여준다. , "1"의 입력이 들어오면 해당 값을 반환(return)한다.
         System.out.println("선택된 번호 : " + selectedNumber);
 
-
-
-        // Connetction, PreparedStatement, ResultSet은 interface 객체이다
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        // try .. catch : try에서 수행한 코드가 '실패'하면 catch를 수행한다
-        try{
-            /*
-             * 1. db(mariadb)를 접속하기 위한 객체를 가져오고
-             * 2. db 접속 정보를 가지고 db에 접속하고
-             * 3. 쿼리를 날려서
-             * 4. 결과를 메모리에 저장시킨다.
-             * .jar(Java ARchive) :  java 라이브러리 파일
-             */
-            Class.forName("org.mariadb.jdbc.Driver"); // org.mariadb.jdbc.Driver 패키지 안에 Driver라는 클래스를 참조하시오
-            // db 접속 수집
-            conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/DGD","root", "0000");
-            // 쿼리를 준비(PrepareStatement 객체의 특징 : sql injection이라는 취약점
-            pstmt = conn.prepareStatement("select * from Student");
-            // pstmt에서 설정한 쿼리를 날린 결과를 메모리에 저장.
-            rs = pstmt.executeQuery();
-
-            /* 쿼리날린 결과를 가지고 콘솔에 출력한다 */
-            while(rs.next()){ // next() :Set의 다른 데이터도 있는지 없는지?를 감지하는 메소드
-                System.out.println(rs.getInt(1) + " | " + rs.getString(2) + " | " + rs.getInt(3) + " | " + rs.getString(4) + " | " + rs.getString(5));
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        // selectedNumber에 따라 학생 테이블을 전체 조회 한다.
+        DbProcess dp = new DbProcess(selectedNumber);
+        dp.startProcessing();
     }
 }

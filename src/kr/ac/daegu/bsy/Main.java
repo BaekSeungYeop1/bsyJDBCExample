@@ -19,12 +19,15 @@ public class Main {
         Scanner sc = new Scanner(System.in); // in:멤버변수
         int selectedNumber;
         while (true){
+            System.out.println("1. 전체학생조회");
             System.out.println("번호를 입력하시오"); //// println(녹색):메소드
             selectedNumber = sc.nextInt();
             if (selectedNumber == 1) {
                     break;
             }
-            System.out.println("다시 입력해주세요");
+            System.out.println("잘못 입력하였습니다");
+            System.out.println("주어진 메뉴 중 하나를 선택해주세요");
+            System.out.println(" ");
 
         }
 
